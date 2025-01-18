@@ -54,6 +54,10 @@ public class Recipes {
 						addRecipe();
 						break;
 						
+					case 3:
+						listRecipes();
+						break;
+						
 					default:
 						System.out.println("\n" + operation + " is not vaild. Try again.");
 				}// @formatter:on
@@ -66,7 +70,17 @@ public class Recipes {
 
 	/*
 	 * 
-	 * 	
+	 */
+	private void listRecipes() {
+		List<Recipe> recipes = recipeService.fetchRecipes();
+		
+		System.out.println("\nRecipes:");
+		
+		recipes.forEach(recipe -> System.out.println("   " + recipe.getRecipeId() + ": " + recipe.getRecipeName()));
+	}
+
+	/*
+	 * Add a recipe (without ingredients, steps, or categories) 	
 	 */
 	private void addRecipe() {
 		String name = getStringInput("Enter the recipe name");

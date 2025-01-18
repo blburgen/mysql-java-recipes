@@ -84,5 +84,9 @@ public class RecipeService {
 	public Recipe addRecipe(Recipe recipe) {
 		return recipeDao.insertRecipe(recipe);
 	}
+
+	public List<Recipe> fetchRecipes() {
+		return recipeDao.fetchAllRecipes();
+	}
 	
 }
