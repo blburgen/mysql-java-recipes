@@ -10,8 +10,13 @@ import recipes.exception.DbException;
 public class RecipeService {
 	private static final String SCHEMA_FILE = "recipe_schema.sql";
 	private static final String DATA_FILE = "recipe_data.sql";
-	
+
 	private RecipeDao recipeDao = new RecipeDao();
+
+	public Recipe fetchRecipeById(Integer recipeId) {
+		return recipeDao.fetchRecipeById(recipeId)
+				.orElseThrow(() -> new NoSuchElementException("Recipe with ID=" + recipeId + "does not exist."));
+	}
 	
 	public void createAndPopulateTables() {
 		loadFromFile(SCHEMA_FILE);
@@ -21,34 +26,34 @@ public class RecipeService {
 	private void loadFromFile(String fileName) {
 		String content = readFileContent(fileName);
 		List<String> sqlStatements = convertContentToSqlStatements(content);
-		
+
 		recipeDao.executeBatch(sqlStatements);
 	}
 
 	private List<String> convertContentToSqlStatements(String content) {
 		content = removeComments(content);
 		content = replaceWhiteSpaceSewuencesWithSingleSpace(content);
-		
+
 		return extractLinesFromContent(content);
 	}
 
 	private List<String> extractLinesFromContent(String content) {
 		List<String> lines = new LinkedList<>();
-		
-		while(!content.isEmpty()) {
+
+		while (!content.isEmpty()) {
 			int semicolon = content.indexOf(";");
-			
-			if(semicolon == -1) {
-				if(!content.isBlank()) {
+
+			if (semicolon == -1) {
+				if (!content.isBlank()) {
 					lines.add(content);
 				}
 				content = "";
 			} else {
-				lines.add(content.substring(0,semicolon).trim());
+				lines.add(content.substring(0, semicolon).trim());
 				content = content.substring(semicolon + 1);
 			}
 		}
-		
+
 		return lines;
 	}
 
@@ -59,11 +64,11 @@ public class RecipeService {
 	private String removeComments(String content) {
 		StringBuilder builder = new StringBuilder(content);
 		int commentPos = 0;
-		
-		while((commentPos = builder.indexOf("-- ", commentPos)) != -1) {
-			int eolPos = builder.indexOf("\n", commentPos +1);
-			
-			if (eolPos ==-1) {
+
+		while ((commentPos = builder.indexOf("-- ", commentPos)) != -1) {
+			int eolPos = builder.indexOf("\n", commentPos + 1);
+
+			if (eolPos == -1) {
 				builder.replace(commentPos, builder.length(), "");
 			} else {
 				builder.replace(commentPos, eolPos + 1, "");
@@ -88,5 +93,6 @@ public class RecipeService {
 	public List<Recipe> fetchRecipes() {
 		return recipeDao.fetchAllRecipes();
 	}
+
 	
 }
