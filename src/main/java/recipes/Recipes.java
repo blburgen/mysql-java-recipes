@@ -14,13 +14,16 @@ public class Recipes {
 	private Scanner scanner = new Scanner(System.in);
 	private RecipeService recipeService = new RecipeService();
 
+	// This is the menu
 	// @formatter:off
 	private List<String> operations = List.of(
 		"1) Create and populate all tables",
-		"2) Add a recipe"
+		"2) Add a recipe",
+		"3) List recipes"
 	);
 	// @formatter:on
 
+	// Entry point of the application
 	public static void main(String[] args) {
 		new Recipes().displayMenu();
 
@@ -74,15 +77,15 @@ public class Recipes {
 
 		LocalTime prepTime = minutesToLocalTime(prepMinutes);
 		LocalTime cookTime = minutesToLocalTime(cookMinutes);
-		
+
 		Recipe recipe = new Recipe();
-		
+
 		recipe.setRecipeName(name);
 		recipe.setNotes(notes);
 		recipe.setNumServings(numServings);
 		recipe.setPrepTime(prepTime);
 		recipe.setCookTime(cookTime);
-		
+
 		Recipe dbRecipe = recipeService.addRecipe(recipe);
 		System.out.println("You added this recipe\n" + dbRecipe);
 	}
@@ -93,9 +96,9 @@ public class Recipes {
 	 */
 	private LocalTime minutesToLocalTime(Integer numMinutes) {
 		int min = Objects.isNull(numMinutes) ? 0 : numMinutes;
-		int hours = min /60;
+		int hours = min / 60;
 		int minutes = min % 60;
-		
+
 		return LocalTime.of(hours, minutes);
 	}
 
@@ -160,19 +163,15 @@ public class Recipes {
 	 * 
 	 * 	
 	 */
-	private Double getDoubleInput(String prompt) {
-		String input = getStringInput(prompt);
-
-		if (Objects.isNull(input)) {
-			return null;
-		}
-
-		try {
-			return Double.parseDouble(input);
-		} catch (NumberFormatException e) {
-			throw new DbException(input + " is not a vaild number.");
-		}
-	}
+	/*
+	 * private Double getDoubleInput(String prompt) { String input =
+	 * getStringInput(prompt);
+	 * 
+	 * if (Objects.isNull(input)) { return null; }
+	 * 
+	 * try { return Double.parseDouble(input); } catch (NumberFormatException e) {
+	 * throw new DbException(input + " is not a vaild number."); } }
+	 */
 
 	/*
 	 * 
