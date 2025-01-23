@@ -120,5 +120,16 @@ public class RecipeService {
 		
 	}
 
+	public List<Step> fetchSteps(Integer recipeId) {
+		return recipeDao.fetchRecipeSteps(recipeId);
+	}
+
+	public void modifyStep(Step step) {
+		if(!recipeDao.modifyRecipeStep(step)) {
+			throw new DbException("Step with ID=" + step.getStepId() + " does not exist.");
+		}
+		
+	}
+
 	
 }
